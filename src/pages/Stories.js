@@ -1,69 +1,69 @@
 import React, { useState, useEffect } from "react";
-import { connect } from "react-redux"
-import * as actions from '../state/actions';
-import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import { Link } from 'react-router-dom';
-import styled from 'styled-components';
+import { connect } from "react-redux";
+import * as actions from "../state/actions";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { Link } from "react-router-dom";
+import styled from "styled-components";
 import { imageBank } from "../utils/data";
-import Header from '../components/Website/Header';
+import Header from "../components/Website/Header";
 import Roller from "../components/LoadingIndicator/roller";
 
-
 const Stories = ({ getUserStories, userStories, userStoriesStatus }) => {
+  const [isLoading, setLoader] = useState(true);
 
-    const [ isLoading, setLoader ] = useState(true);
+  useEffect(() => {
+    getUserStories();
+  }, [userStories]); // eslint-disable-line
 
-    useEffect(() => {
-        getUserStories();
-    }, [userStories]) // eslint-disable-line
+  useEffect(() => {
+    if (userStoriesStatus === false && isLoading) {
+      toast.error("Oops, something went wrong. Try again!");
+      setLoader(false);
+    }
+  }, [userStoriesStatus, isLoading]);
 
-    useEffect(() => {
-        if(userStoriesStatus === false && isLoading) {
-            toast.error("Oops, something went wrong. Try again!");
-            setLoader(false);
-        }
-    }, [userStoriesStatus, isLoading])
-
-    return (
-        <>
-            <Header 
-                height="60vh"
-                title="All Stories"  
-                story="Learn how and why refugee crises have shaped our world over the last half-century through real stories"
-                image="https://images.unsplash.com/photo-1544006790-b3c81bd2fe74?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1500&q=80"
-            />
-            <StyledContainer>
-                {   
-                    !userStoriesStatus && isLoading ? (
-                        <div className="loading-indicator">
-                            <Roller isSiteWide={true} />
-                        </div>
-                    ) : (
-                        <ul>
-                            {
-                                userStories.map(({id, title, story}) => {
-                                    const image = imageBank.filter((item, index) => index === (id - 1))[0] || "https://source.unsplash.com/1600x900/?refugees,refugee";
-                                    return (
-                                        <li key={id}>
-                                            <div className="card-content">
-                                                <h3>{title}</h3>
-                                                <p>{`${story.split(" ").splice(0, 15).join(" ")}...`}</p>
-                                                <Link to={`/stories/${id}`}>Read full story <span>&#62;</span></Link>
-                                            </div>
-                                            <div className="card-image">
-                                                <img src={image} alt={title} />
-                                            </div>
-                                        </li>
-                                    )
-                                })
-                            }
-                        </ul>
-                    )
-                }
-            </StyledContainer>
-        </>
-    )
+  return (
+    <>
+      <Header
+        height="60vh"
+        title="Happy Birthday Babykins ❤️"
+        story="Thanks for all the memories you’ve given to me. No matter how old we get, and how many more birthdays we celebrate, I will always be here for you. Happy Birthday."
+        image="https://res.cloudinary.com/menadio/image/upload/v1577440354/IMG_4485_muavsp.jpg"
+      />
+      <StyledContainer>
+        {!userStoriesStatus && isLoading ? (
+          <div className="loading-indicator">
+            <Roller isSiteWide={true} />
+          </div>
+        ) : (
+          <ul>
+            {userStories.map(({ id, title, story }) => {
+              const image =
+                imageBank.filter((item, index) => index === id - 1)[0];
+              return (
+                <li key={id}>
+                  <div className="card-content">
+                    <h3>{title}</h3>
+                    <p>{`${story
+                      .split(" ")
+                      .splice(0, 15)
+                      .join(" ")}...`}</p>
+                    <Link to={`/stories/${id}`}>
+                      Read full story <span>&#62;</span>
+                    </Link>
+                  </div>
+                  <div className="card-image">
+                    <img src={image} alt={title} />
+                  </div>
+                </li>
+              );
+            })}
+          </ul>
+        )}
+      </StyledContainer>
+    </>
+  );
 };
 
 export default connect(state => state, actions)(Stories);
@@ -105,7 +105,7 @@ const StyledContainer = styled.main`
 
         .card-content,
         .card-image {
-            min-height: 300px;
+            min-height: 400px;
             width: 50%;
             position: relative;
 
@@ -149,7 +149,8 @@ const StyledContainer = styled.main`
                 border-bottom: 3px solid transparent;
 
                 &:hover {
-                    border-bottom: 3px solid ${props => props.theme.primaryColor};
+                    border-bottom: 3px solid ${props =>
+                      props.theme.primaryColor};
                 }
             }
         }
@@ -164,8 +165,10 @@ const StyledContainer = styled.main`
             .card-content,
             .card-image {
                 width: 100%;
+                
 
                 img {
+                  
                     border-top-left-radius: 0;
                     border-top-right-radius: 0;
                     border-bottom-left-radius: 5px;
@@ -184,4 +187,4 @@ const StyledContainer = styled.main`
                 }
             }
     }
-`
+`;
